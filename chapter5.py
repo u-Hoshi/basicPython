@@ -55,4 +55,23 @@ dinner(side="山盛りポテト")
 list=list(map(lambda x:x*x,[1,2,3,4,5]))
 print(list)
 
-# 位置No.136までやった
+# 変数のスコープ
+  # global文
+def cat():
+    global pet
+    pet ="cat"
+
+pet="dog"
+cat()
+print(pet)
+
+  # nonlocal文
+def dog():
+    def cat():
+        # nonlocal pet
+        pet="cat"
+        print(pet)
+    pet="dog"
+    cat()
+    print(pet)
+dog()
