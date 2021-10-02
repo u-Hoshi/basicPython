@@ -1,7 +1,4 @@
 from datetime import datetime
-from sqlalchemy.sql.expression import nullsfirst
-
-from sqlalchemy.sql.sqltypes import Date
 
 from db import Base
 
@@ -71,17 +68,19 @@ class Task(Base):
   deadline = Column(
     "deadline",
     DateTime,
-    default == None,
-    nullable == False,
+    default = None,
+    nullable = False,
   )
 
   date = Column(
     "date",
     DateTime,
     default=datetime.now(),
-    nullsfirst=False,
+    nullable=False,
     server_default=current_timestamp()
       )
+    
+  done = Column("done",BOOLEAN,default=False,nullable=False)
 
   def __init__(self, user_id: int, content: str, deadline: datetime, date: datetime = datetime.now()):
         self.user_id = user_id

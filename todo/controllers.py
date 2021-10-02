@@ -1,3 +1,5 @@
+import db
+from models import User, Task
 from fastapi import FastAPI
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
@@ -17,4 +19,10 @@ def index(request:Request):
   return templates.TemplateResponse("index.html",{"request":request,})
 
 def admin(request:Request):
-  return templates.TemplateResponse("admin.html",{"request":request,"username":"admin"})
+  user = db.session.query(User).filter(User.username=="admin").first()
+  task = db.session.query(Task).filter(Task.user_id==user.id).all()
+  db.session.close()
+  return templates.TemplateResponse("admin.html",
+                                    {"request":request,
+                                    "user":user,
+                                    "task":task})
