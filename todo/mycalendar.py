@@ -32,4 +32,41 @@ def formatmonth(self,theyear,themonth,withyear=True):
   a("\n")
   return "".join(v)
 
+def formatweek(self,theweek,theyear,themonth):
+  """
+  オーバーライド
+  引数でyearとmonthを渡すようにする
+  """
+  s=".join(self.formatday(d,wd,theyear,themonth)for (d,wd)in theweek)"
+  return "<tr>%s</tr>" % s
+
+def formatday(self,day,weekday,theyear,themonth):
+  """
+  オーバーライド
+  引数でyearとmonthを渡す
+  """
+
+  if day==0:
+    return '<td style="background-color:#eeeeee">&nbsp;</tb>'
+  else:
+    html='<td class="text-center {highlight}"><a href="{url}" style="color:{text}">{day}</a></td>'
+    text="blue"
+    highlight=""
+
+    date=datetime(year=theyear,month=themonth,day=day)
+    date_str=date.strftime("%Y%m%d")
+    if date_str in self.linked_date:
+      highlight="bg-success"
+      text="white"
+    elif date<datetime.now():
+      highlight="bg-secondary"
+      text="white"
+    else:
+      highlight="bg-warning"
+  return html.format(
+                    url="/todo/{}/{}/{}/{}".format(self.username,theyear,themonth,day),
+                    text=text,
+                    day=day,
+                    highlight=highlight)
+
 
