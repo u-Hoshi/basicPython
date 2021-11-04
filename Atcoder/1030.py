@@ -30,6 +30,14 @@ for i in p:
 print(ans)
 
 # B問題
-N = int(input())
-l = [list(map(int, input().split())) for l in range(N)]
+# 最初の回答
+N = int(input())-1
+xy = [map(int, input().split()) for _ in range(N)]
+x, y = [list(i) for i in zip(*xy)]
 
+ans=len(set(x))
+
+if ans==N:
+  print("Yes")
+else:
+  print("No")
