@@ -20,7 +20,6 @@ if __name__=="__main__":
     content="〇〇の締切",
     deadline=datetime(2021,12,31,11,59),
   )
-  print(task)
   db.session.add(task)
   db.session.commit()
 
