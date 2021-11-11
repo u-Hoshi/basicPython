@@ -159,4 +159,51 @@ async def done(request: Request, credentials: HTTPBasicCredentials = Depends(sec
     db.session.commit()  # update!!
     db.session.close()
 
-    return RedirectResponse('/admin')  # 管理者トップへリダイレクト                                       
+    return RedirectResponse('/admin')  # 管理者トップへリダイレクト
+
+# タスクの追加
+async def add(request:Request,credentials:HTTPBasicCredentials=Depends(security)):
+  # 認証
+  username=auth(credentials)
+
+  # ユーザー情報を取得
+  user=db.session.query(User).filter(User.username==username).first()
+
+  # フォームからデータを取得
+  data = await request.form()
+  year = int(data['year'])
+  month = int(data["month"])
+  day = int(data["day"])
+  hour = int(data["hour"])
+  minute = int(data["minute"])
+
+  deadline=datetime(year=year,month=month,day=day,hour=hour,minute=minute)
+
+  # 新しいタスクを生成しコミット
+  task=Task(user.id,data["content"],deadline)
+  db.session.add(task)
+  db.session.commit()
+  db.session.close()
+
+  return RedirectResponse("/admin")
+
+def delete(request: Request, t_id, credentials: HTTPBasicCredentials = Depends(security)):
+    # 認証
+    username = auth(credentials)
+
+    # ログインユーザ情報を取得
+    user = db.session.query(User).filter(User.username == username).first()
+
+    # 該当タスクを取得
+    task = db.session.query(Task).filter(Task.id == t_id).first()
+
+    # もしユーザIDが異なれば削除せずリダイレクト
+    if task.user_id != user.id:
+        return RedirectResponse('/admin')
+
+    # 削除してコミット
+    db.session.delete(task)
+    db.session.commit()
+    db.session.close()
+
+    return RedirectResponse('/admin')
