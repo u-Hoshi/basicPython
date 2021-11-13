@@ -1,11 +1,11 @@
 import db
 from models import User, Task
 from fastapi import security
-from starlette import requests
-from fastapi import FastAPI,Depends,HTTPException
+from fastapi import FastAPI,Depends,Form
 
 from fastapi.security import HTTPBasic,HTTPBasicCredentials
 
+from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
@@ -17,11 +17,22 @@ from mycalendar import MyCalendar
 from datetime import datetime, timedelta  # これもあとで使う
 from auth import auth
 
-# controllers.py
 import re  # new
 pattern = re.compile(r'\w{4,20}')  # 任意の4~20の英数字を示す正規表現
 pattern_pw = re.compile(r'\w{6,20}')  # 任意の6~20の英数字を示す正規表現
 pattern_mail = re.compile(r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$') # e-mailの正規表現
+
+app = FastAPI(
+  title="FastAPIで作るtodoアプリ",
+  description="FastAPIの学習用チュートリアル",
+  version="0.9"
+)
+security = HTTPBasic() 
+# staticディレクトリの設定 (starlette)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# テンプレート関連の設定
+templates = Jinja2Templates(directory="templates")
+jinja_env = templates.env
 
 async def register(request:Request):
   if request.method == 'GET':
@@ -64,20 +75,11 @@ async def register(request:Request):
     db.session.close()
 
 
-app = FastAPI(
-  title="FastAPIで作るtodoアプリ",
-  description="FastAPIの学習用チュートリアル",
-  version="0.9"
-)
 
-# テンプレート関連の設定
-templates = Jinja2Templates(directory="templates")
-jinja_env = templates.env
 
-security = HTTPBasic() 
 
 def index(request:Request):
-  return templates.TemplateResponse("index.html",{"request":request,})
+  return templates.TemplateResponse('index.html',{'request':request})
 
 def admin(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
 
@@ -85,8 +87,6 @@ def admin(request: Request, credentials: HTTPBasicCredentials = Depends(security
 
     user = db.session.query(User).filter(User.username == username).first()
     task = db.session.query(Task).filter(Task.user_id == user.id).all()
-    # user = db.session.query(User).filter(User.username == 'admin').first()
-    # task = db.session.query(Task).filter(Task.user_id == user.id).all()
     db.session.close()
 
     # 今日の日付と来週の日付
@@ -173,19 +173,19 @@ async def add(request:Request,credentials:HTTPBasicCredentials=Depends(security)
   data = await request.form()
   year = int(data['year'])
   month = int(data["month"])
-  day = int(data["day"])
-  hour = int(data["hour"])
-  minute = int(data["minute"])
+  day = int(data['day'])
+  hour = int(data['hour'])
+  minute = int(data['minute'])
 
   deadline=datetime(year=year,month=month,day=day,hour=hour,minute=minute)
 
   # 新しいタスクを生成しコミット
-  task=Task(user.id,data["content"],deadline)
+  task=Task(user.id,data['content'],deadline)
   db.session.add(task)
   db.session.commit()
   db.session.close()
 
-  return RedirectResponse("/admin")
+  return RedirectResponse('/admin')
 
 def delete(request: Request, t_id, credentials: HTTPBasicCredentials = Depends(security)):
     # 認証
@@ -230,3 +230,34 @@ def get(request: Request, credentials: HTTPBasicCredentials = Depends(security))
     } for t in task]
 
     return task
+
+async def insert(request: Request,
+                 content: str = Form(...), deadline: str = Form(...),
+                 credentials: HTTPBasicCredentials = Depends(security)):
+    """
+    タスクを追加してJSONで新規タスクを返す。「deadline」は%Y-%m-%d_%H:%M:%S (e.g. 2019-11-03_12:30:00)の形式
+    """
+    # 認証
+    username = auth(credentials)
+
+    # ユーザ情報を取得
+    user = db.session.query(User).filter(User.username == username).first()
+
+    # タスクを追加
+    task = Task(user.id, content, datetime.strptime(deadline, '%Y-%m-%d_%H:%M:%S'))
+
+    db.session.add(task)
+    db.session.commit()
+
+    # テーブルから新しく追加したタスクを取得する
+    task = db.session.query(Task).all()[-1]
+    db.session.close()
+
+    # 新規タスクをJSONで返す
+    return {
+        'id': task.id,
+        'content': task.content,
+        'deadline': task.deadline.strftime('%Y-%m-%d %H:%M:%S'),
+        'published': task.date.strftime('%Y-%m-%d %H:%M:%S'),
+        'done': task.done,
+    }
