@@ -1,4 +1,4 @@
-デプロイ先 Deta
+デプロイ先 Deta:https://www.deta.sh/
 
 エンドポイント:https://b9qazj.deta.dev/
 
