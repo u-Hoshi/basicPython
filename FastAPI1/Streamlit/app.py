@@ -18,5 +18,9 @@ options = st.multiselect(
 st.write(f"選択肢{options}")
 
 
-age = st.slider('How old are you?', 0, 130, 25)
+age = st.sidebar.slider('How old are you?', 0, 130, 25)
 st.write("I'm ", age, 'years old')
+
+col1,col2 = st.columns(2)
+col1.write("col1")
+col2.write("col2")
