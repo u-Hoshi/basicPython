@@ -1,15 +1,16 @@
 import streamlit as st
+import pandas as pd
 
 st.title("Sample App")
 
-#st.markdown("## hoge")
+df=pd.DataFrame({
+  "一列目":[1,2,3,4],
+  "二列目":[-1,-2,-3,-4]
+})
+st.dataframe(df)
 
-st.markdown("""
-## hoge
-# foo
-# """)
-
-st.code("a=1")
-
-#st.write("sample App")
-#"hello world"
+st.json({
+  "data":{
+    "name":"hoge"
+  }
+})
