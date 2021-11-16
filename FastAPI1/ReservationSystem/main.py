@@ -14,7 +14,7 @@ class Booking(BaseModel):
 
 class User(BaseModel):
   user_id:int
-  user_name:str=Field(max_length=12)
+  username:str=Field(max_length=12)
 
 class Room(BaseModel):
   room_id:int
@@ -22,6 +22,7 @@ class Room(BaseModel):
   capacity:int
 
 app=FastAPI()
+
 
 @app.get("/")
 async def index():
@@ -35,6 +36,6 @@ async def users(users:User):
 async def rooms(rooms:Room):
   return {"rooms":rooms}
 
-@app.post("/booking")
-async def booking(booking:Booking):
-  return {"booking":booking}
+@app.post("/bookings")
+async def bookings(bookings:Booking):
+  return {"bookings":bookings}
