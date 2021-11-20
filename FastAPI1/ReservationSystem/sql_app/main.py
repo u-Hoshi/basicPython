@@ -1,47 +1,56 @@
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-from . import crud,models,schemas
-from .database import SeesionLocal,engine
+from . import crud, models, schemas
+from .database import SeesionLocal, engine
 from sql_app.schemas import Booking, Room, User
 
 models.Base.metadata.create_all(bind=engine)
 
-app=FastAPI()
+app = FastAPI()
 
-def get_db():# セッションを獲得する関数
-  db=SeesionLocal()
-  try:
-    yield db
-  finally:
-    yield db.close()
 
-@app.get("/")
+def get_db():  # セッションを獲得する関数
+    db = SeesionLocal()
+    try:
+        yield db
+    finally:
+        yield db.close()
+
+
+# @app.get("/")
 # async def index():
 #   return {"message":"success"}
 
 # Read
-@app.get("/users",response_model=List[schemas.User])
-async def read_users(users:User):
-  return {"users":users}
-  
-@app.get("/rooms")
-async def rooms(rooms:Room):
-  return {"rooms":rooms}
+@app.get("/users", response_model=List[schemas.User])
+async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db, skip=skip, limit=limit)
+    return users
 
-@app.get("/bookings")
-async def bookings(bookings:Booking):
-  return {"bookings":bookings}
+
+@app.get("/rooms", response_model=List[schemas.Room])
+async def read_rooms(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    rooms = crud.get_rooms(db, skip=skip, limit=limit)
+    return rooms
+
+
+@app.get("/bookings", response_model=List[schemas.Booking])
+async def read_bookings(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    bookings = crud.get_bookings(db, skip=skip, limit=limit)
+    return bookings
 
 
 # Create
-@app.post("/users")
-async def users(users:User):
-  return {"users":users}
-  
-@app.post("/rooms")
-async def rooms(rooms:Room):
-  return {"rooms":rooms}
+@app.post("/users",response_model=schemas.User)
+async def create_users(user:schemas.User,db:Session=Depends(get_db)):
+    return crud.create_user(db=db,user=user)
 
-@app.post("/bookings")
-async def bookings(bookings:Booking):
-  return {"bookings":bookings}  
+
+@app.post("/rooms",response_model=schemas.Room)
+async def create_rooms(room:schemas.User,db:Session=Depends(get_db)):
+    return crud.create_room(db=db,room=room)
+
+
+@app.post("/bookings",response_model=schemas.User)
+async def create_rooms(booking:schemas.User,db:Session=Depends(get_db)):
+    return crud.create_booking(db=db,booking=booking)
