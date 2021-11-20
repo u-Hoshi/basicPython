@@ -1,7 +1,8 @@
+from typing import List
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from . import crud, models, schemas
-from .database import SeesionLocal, engine
+from .database import SessionLocal, engine
 from sql_app.schemas import Booking, Room, User
 
 models.Base.metadata.create_all(bind=engine)
@@ -10,7 +11,7 @@ app = FastAPI()
 
 
 def get_db():  # セッションを獲得する関数
-    db = SeesionLocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
@@ -41,16 +42,16 @@ async def read_bookings(skip: int = 0, limit: int = 100, db: Session = Depends(g
 
 
 # Create
-@app.post("/users",response_model=schemas.User)
-async def create_users(user:schemas.User,db:Session=Depends(get_db)):
-    return crud.create_user(db=db,user=user)
+@app.post("/users", response_model=schemas.User)
+async def create_users(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db=db, user=user)
 
 
-@app.post("/rooms",response_model=schemas.Room)
-async def create_rooms(room:schemas.User,db:Session=Depends(get_db)):
-    return crud.create_room(db=db,room=room)
+@app.post("/rooms", response_model=schemas.Room)
+async def create_rooms(room: schemas.RoomCreate, db: Session = Depends(get_db)):
+    return crud.create_room(db=db, room=room)
 
 
-@app.post("/bookings",response_model=schemas.User)
-async def create_rooms(booking:schemas.User,db:Session=Depends(get_db)):
-    return crud.create_booking(db=db,booking=booking)
+@app.post("/bookings", response_model=schemas.Booking)
+async def create_rooms(booking: schemas.BookingCreate, db: Session = Depends(get_db)):
+    return crud.create_booking(db=db, booking=booking)
