@@ -1,6 +1,8 @@
-main.py の起動方法`uvicorn main:app --reload`
+main.py の起動方法：`uvicorn main:app --reload`
 
-streamlit(app.py)の起動方法`streamlit run app.py`
+streamlit(app.py)の起動方法：`streamlit run app.py`
+
+自動ドキュメント：`http://localhost:8000/redoc` or `http://localhost:8000/docs`
 
 models.py は SQLAlchemy 側の構造
 
