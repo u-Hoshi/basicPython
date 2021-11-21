@@ -31,16 +31,20 @@ elif page == "rooms":
     with st.form(key="room"):
         room_id: int = random.randint(0, 10)  # 自動採番
         room_name: str = st.text_input("会議室名", max_chars=12)
-        capacity: int = st.number_input("店員", step=1)
-        data = {"room_id": room_id, "room_name": room_name, "capacity": capacity}
-        submit_button = st.form_submit_button(label="リクエスト送信")
+        capacity: int = st.number_input("定員", step=1)
+        data = {
+            # "room_id": room_id,
+            "room_name": room_name,
+            "capacity": capacity,
+        }
+        submit_button = st.form_submit_button(label="会議室登録")
     if submit_button:
-        st.write("送信データ")
-        st.json(data)
-        st.write("レスポンスの結果")
         url = "http://127.0.0.1:8000/rooms"
         res = requests.post(url, data=json.dumps(data))
-        st.write(res.status_code)
+        if res.status_code == 200:
+            st.success("会議室登録完了")
+        else:
+            st.error("会議室登録失敗")
         st.json(res.json())
 elif page == "bookings":
     st.title("APIテスト画面(予約)")
