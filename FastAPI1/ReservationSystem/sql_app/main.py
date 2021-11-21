@@ -15,7 +15,7 @@ def get_db():  # セッションを獲得する関数
     try:
         yield db
     finally:
-        yield db.close()
+        db.close()
 
 
 # @app.get("/")
@@ -53,5 +53,5 @@ async def create_rooms(room: schemas.RoomCreate, db: Session = Depends(get_db)):
 
 
 @app.post("/bookings", response_model=schemas.Booking)
-async def create_rooms(booking: schemas.BookingCreate, db: Session = Depends(get_db)):
+async def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)):
     return crud.create_booking(db=db, booking=booking)
