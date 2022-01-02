@@ -2,7 +2,7 @@ from decouple import config
 from typing import Union
 import motor.motor_asyncio
 
-MONGO_API_KEY = config("MONG_API_KEY")
+MONGO_API_KEY = config("MONGO_API_KEY")
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_API_KEY)
 database = client.API_DB
