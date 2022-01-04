@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 # ここでリクエストのデータ型を定義する
@@ -17,3 +18,15 @@ class TodoBody(BaseModel):
 
 class SuccessMsg(BaseModel):
     message: str
+
+
+# フロントエンドから送られてくるデータ型
+class UserBody(BaseModel):
+    email: str
+    password: str
+
+
+# RESTapiのレスポンスの型
+class UserInfo(BaseModel):
+    id: Optional[str] = None
+    email: str
