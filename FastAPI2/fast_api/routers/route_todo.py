@@ -1,7 +1,6 @@
 from typing import List
-from fastapi import APIRouter
 from schemas import Todo, TodoBody, SuccessMsg
-from fastapi import Request, Response, HTTPException
+from fastapi import APIRouter, Depends, Request, Response, HTTPException
 from fastapi.encoders import jsonable_encoder
 from database import (
     db_create_todo,
@@ -12,15 +11,33 @@ from database import (
 )
 from starlette.status import HTTP_201_CREATED
 from typing import List
+from fastapi_csrf_protect import CsrfProtect
+from auth_utils import AuthJwtCsrf
 
 router = APIRouter()
+auth = AuthJwtCsrf()
 
 # post(パス,返ってくるjsonのデータ型)
 @router.post("/api/todo", response_model=Todo)
-async def create_todo(requests: Request, response: Response, data: TodoBody):
+async def create_todo(
+    request: Request,
+    response: Response,
+    data: TodoBody,
+    csrf_protect: CsrfProtect = Depends(),
+):
+    new_token = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)
+    # auth.verify_csrf_update_jwtでエラーだった場合は以下の処理が行われない
     todo = jsonable_encoder(data)  # jsonから辞書型に変換
     res = await db_create_todo(todo)
     response.status_code = HTTP_201_CREATED
+    # 新しいnew_tokenで書き換える
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {new_token}",
+        httponly=True,
+        samesite="none",
+        secure=True,
+    )
     if res:  # 正しく動作しデータが存在するとき
         return res
     raise HTTPException(status_code=404, detail="create task failed")

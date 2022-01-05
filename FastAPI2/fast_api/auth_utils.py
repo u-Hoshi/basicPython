@@ -1,5 +1,5 @@
 import jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, requests
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from decouple import config
@@ -38,3 +38,28 @@ class AuthJwtCsrf:
             raise HTTPException(status_code=401, detail="The JWT has expired")
         except jwt.InvalidTokenError as e:
             raise HTTPException(status_code=401, detail="JWT is not valid")
+
+    def verify_jwt(self, request) -> str:
+        # JWTトークンを検証するメソッド
+        token = request.cookies.get("access_token")
+        if not token:
+            raise HTTPException(
+                status_code=401, details="No JWT exist: may not set yet or deleted"
+            )
+        _, _, value = token.partition(" ")
+        subject = self.decode_jwt(value)
+        return subject
+
+    def verify_update_jwt(self, request) -> tuple[str, str]:  # 更新されたJWTとsubjectを返す
+        # JWTトークンを検証し、更新するメソッド
+        subject = self.verify_jwt(request)
+        new_token = self.encode_jwt(subject)
+        return new_token, subject
+
+    def verify_csrf_update_jwt(self, request, csrf_protect, headers) -> str:
+        # CSRFトークンの検証、JWTの検証、更新をするメソッド
+        csrf_token = csrf_protect.get_csrf_from_headers(request.headers)
+        csrf_protect.validate_csrf(csrf_token)
+        subject = self.verify_jwt(request)
+        new_token = self.encode_jwt(subject)
+        return new_token
