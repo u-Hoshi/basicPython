@@ -1,4 +1,5 @@
 from typing import Optional
+from fastapi_csrf_protect import csrf_config
 from pydantic import BaseModel
 from decouple import config
 
@@ -38,3 +39,8 @@ class UserBody(BaseModel):
 class UserInfo(BaseModel):
     id: Optional[str] = None
     email: str
+
+
+# csrftokenの型
+class Csrf(BaseModel):
+    csrf_token: str
