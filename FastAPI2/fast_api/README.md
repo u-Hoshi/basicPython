@@ -19,3 +19,14 @@ https://motor.readthedocs.io/en/stable/api-asyncio/asyncio_motor_collection.html
 insert_one に関して
 
 https://pymongo.readthedocs.io/en/3.12.0/api/pymongo/results.html#pymongo.results.InsertOneResult
+
+## Heroku へのデプロイ方法
+
+```
+$ heroku login #CLIからherokuにアクセスしてプロジェクトを作る
+$ git init
+$ heroku git:remote -a hogehoge
+$ git add .
+$ git commit -m "コミットメッセージ"
+$ git push heroku master
+```

@@ -25,7 +25,7 @@ async def create_todo(
     data: TodoBody,
     csrf_protect: CsrfProtect = Depends(),
 ):
-    new_token = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)
+    new_token, _ = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)
     # auth.verify_csrf_update_jwtでエラーだった場合は以下の処理が行われない
     todo = jsonable_encoder(data)  # jsonから辞書型に変換
     res = await db_create_todo(todo)
@@ -94,7 +94,6 @@ async def delete_todo(
     request: Request,
     response: Response,
     id: str,
-    data: TodoBody,
     csrf_protect: CsrfProtect = Depends(),
 ):
     new_token = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)

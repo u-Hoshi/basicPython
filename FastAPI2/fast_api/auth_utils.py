@@ -1,5 +1,5 @@
 import jwt
-from fastapi import HTTPException, requests
+from fastapi import HTTPException
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from decouple import config
@@ -44,7 +44,7 @@ class AuthJwtCsrf:
         token = request.cookies.get("access_token")
         if not token:
             raise HTTPException(
-                status_code=401, detail="No JWT exist: may not set yet or deleted"
+                status_code=401, detail="No JWT exist: may not set yet or deleted!!!"
             )
         _, _, value = token.partition(" ")
         subject = self.decode_jwt(value)
@@ -58,7 +58,7 @@ class AuthJwtCsrf:
 
     def verify_csrf_update_jwt(self, request, csrf_protect, headers) -> str:
         # CSRFトークンの検証、JWTの検証、更新をするメソッド
-        csrf_token = csrf_protect.get_csrf_from_headers(request.headers)
+        csrf_token = csrf_protect.get_csrf_from_headers(headers)
         csrf_protect.validate_csrf(csrf_token)
         subject = self.verify_jwt(request)
         new_token = self.encode_jwt(subject)

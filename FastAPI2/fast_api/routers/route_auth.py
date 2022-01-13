@@ -1,10 +1,7 @@
-from re import T
 from schemas import Csrf, SuccessMsg, UserBody, UserInfo
-from fastapi import Response, APIRouter, Depends
+from fastapi import Response, APIRouter, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from database import db_signup, db_login
-from starlette.requests import Request
-from starlette.status import HTTP_201_CREATED
 from auth_utils import AuthJwtCsrf
 from fastapi_csrf_protect import CsrfProtect
 
@@ -63,7 +60,7 @@ def logout(request: Request, response: Response, csrf_protect: CsrfProtect = Dep
 
 @router.get("/api/user", response_model=UserInfo)
 def get_user_refresh_jwt(request: Request, response: Response):
-    new_token, subject = auth.verify_csrf_update_jwt(request)
+    new_token, subject = auth.verify_update_jwt(request)
     response.set_cookie(
         key="access_token",
         value=f"Bearer {new_token}",
