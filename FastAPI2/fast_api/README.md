@@ -30,3 +30,15 @@ $ git add .
 $ git commit -m "コミットメッセージ"
 $ git push heroku master
 ```
+
+## パッケージのバージョンを txt に出力
+
+```
+$ pip freeze -> requirements.txt
+```
+
+## ファイルに関して
+
+database.py には mongoDB と連携するための処理
+
+schemas.py にはエンドポイントに渡すデータ型などを定義

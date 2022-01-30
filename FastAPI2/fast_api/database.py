@@ -80,7 +80,7 @@ async def db_signup(data: dict) -> dict:
     email = data.get("email")
     password = data.get("password")
     overlap_user = await collection_user.find_one({"email": email})
-    if overlap_user:  # emailの重複がないかを確認　既に存在したらエラーを返す
+    if overlap_user:  # emailの重複がないかを確認、既に存在したらエラーを返す
         raise HTTPException(status_code=400, detail="Email is already token")
     if not password or len(password) < 6:  # pwが入力されていないor6文字未満の場合はエラー
         raise HTTPException(status_code=400, detail="password too short")

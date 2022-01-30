@@ -9,10 +9,13 @@ from fastapi_csrf_protect.exceptions import CsrfProtectError
 app = FastAPI()
 app.include_router(route_todo.router)
 app.include_router(route_auth.router)
-
 # RESTAPIへアクセスできるホワイトリスト
-origins = ["http://localhost:3000"]
-
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://192.168.1.8:3000",
+    "http://localhost:3000/todo",
+]
 # appに対してcorsの設定を追加
 app.add_middleware(
     CORSMiddleware,

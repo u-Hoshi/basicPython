@@ -25,7 +25,7 @@ async def create_todo(
     data: TodoBody,
     csrf_protect: CsrfProtect = Depends(),
 ):
-    new_token, _ = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)
+    new_token = auth.verify_csrf_update_jwt(request, csrf_protect, request.headers)
     # auth.verify_csrf_update_jwtでエラーだった場合は以下の処理が行われない
     todo = jsonable_encoder(data)  # jsonから辞書型に変換
     res = await db_create_todo(todo)
@@ -44,7 +44,7 @@ async def create_todo(
 
 
 @router.get("/api/todo", response_model=List[Todo])
-async def get_todo(request: Request):
+async def get_todos(request: Request):
     auth.verify_jwt(request)
     res = await db_get_todos()
     return res
@@ -52,18 +52,18 @@ async def get_todo(request: Request):
 
 @router.get("/api/todo/{id}", response_model=Todo)
 async def get_single_todo(request: Request, response: Response, id: str):
+    new_token, _ = auth.verify_update_jwt(request)
     res = await db_get_single_todo(id)
-    (new_token,) = auth.verify_update_jwt(request)
-    response.set_cooke(
+    response.set_cookie(
         key="access_token",
         value=f"Bearer {new_token}",
-        httpOnly=True,
+        httponly=True,
         samesite="none",
         secure=True,
     )
     if res:
         return res
-    raise HTTPException(status_code=404, detail=("Task of ID]{id} doesn't exist"))
+    raise HTTPException(status_code=404, detail="Task of ID:{id} doesn't exist")
 
 
 @router.put("/api/todo/{id}", response_model=Todo)
