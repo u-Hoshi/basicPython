@@ -8,6 +8,6 @@ class ListView(generics.ListCreateAPIView):
     serializer_class = JobOffersSerializer
 
 
-class DetaView(generics.RetrieveUpdateDestroyAPIView):
+class DetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobOffer.objects.all()
     serializer_class = JobOffersSerializer
