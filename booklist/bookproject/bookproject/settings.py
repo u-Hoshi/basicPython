@@ -55,7 +55,7 @@ ROOT_URLCONF = 'bookproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/ "templates"], # BASE_DIR=manage.pyが入ってる階層を指す
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
