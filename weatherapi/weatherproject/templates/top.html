@@ -12,7 +12,17 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-
+    <script>
+      function getData(id) {
+        fetch(`/api/${id}`)
+          .then(response => response.json())
+          .then(json => {
+            document.getElementById(`weather-${id}`).innerText = json.weather;
+            document.getElementById(`temperature-${id}`).innerText =
+              json.temperature;
+          });
+      }
+    </script>
     <title>天気情報取得アプリ</title>
   </head>
   <body>
