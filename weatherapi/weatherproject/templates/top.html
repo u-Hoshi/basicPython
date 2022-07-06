@@ -30,13 +30,17 @@
     <div class="text-center mt-4 p-4 offset-3 col-6">
       <h1>{{weather.location}}</h1>
       <div class="p-2 bg-light border">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" onclick="getData({{weather.id}})">
           {{weather.location}}の天気情報を更新
         </button>
         <h2 class="p-4">天気</h2>
-        <span class="h3 p-4">{{weather.weather}}</span>
+        <span id="weather-{{weather.id}}" class="h3 p-4"
+          >{{weather.weather}}</span
+        >
         <h2 class="p-4">気温</h2>
-        <span class="h3 p-4">{{weather.temperature}}</span>
+        <span id="temperature-{{weather.id}}" class="h3 p-4"
+          >{{weather.temperature}}</span
+        >
       </div>
     </div>
     {% endfor %}
