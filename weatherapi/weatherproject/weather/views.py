@@ -12,7 +12,7 @@ class TopView(ListView):
   model = Weather
   template_name: str = "top.html"
 
-class WeatherAPIView(RetrieveAPIView): # detailviewのように個別情報を返す
+class WeatherAPIView(RetrieveAPIView): # detailviewのように個別情報を返す(読み込み専用)
   queryset = Weather.objects.all()
   serializer_class = WeatherSerializer
   permission_classes =[IsAuthenticated]
