@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "jobs",
+    
+    "webpack_loader"
 ]
 
 MIDDLEWARE = [
@@ -119,4 +121,12 @@ STATIC_URL = "/static/"
 REST_FRAMEWORK = {
     "PAGE_SIZE": 4,
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+}
+
+
+WEBPACK_LOADER = {
+    "DEFAULT":{
+        "BUNDLE_DIR_NAME":"/dist/",
+        "STATS_FILE":os.path.join(BASE_DIR,"frontend","webpack-stats.json")
+    }
 }
