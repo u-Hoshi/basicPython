@@ -12,11 +12,12 @@ module.exports = {
     config.output.filename('bundle.js');
     config.optimization.splitChunks(false);
     config.resolve.alias.set('__STATIC__', 'static');
-    config.devServer
-      .hotOnly(true)
-      .watchOptions({ poll: 1000 })
-      .https(false)
-      .disableHostCheck(true)
-      .headers({ 'Access-Control-Allow-Origin': ['*'] });
+    // config.devServerを記述するとフロントが起動しなくなる
+    // config.devServer
+    //   .hotOnly(true)
+    //   .watchOptions({ poll: 1000 })
+    //   .https(false)
+    //   .disableHostCheck(true)
+    //   .headers({ 'Access-Control-Allow-Origin': ['*'] });
   },
 };
