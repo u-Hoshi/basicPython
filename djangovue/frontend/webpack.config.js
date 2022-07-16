@@ -1,4 +1,4 @@
-const BundleTracker = require('webpack-bundle-tracker');
+const BundleTracker = require("webpack-bundle-tracker");
 
 const baseConfig = {
   // ...
@@ -6,7 +6,7 @@ const baseConfig = {
     // ⇓ 追加 ⇓
     new BundleTracker({
       path: __dirname,
-      filename: 'webpack-stats.json',
+      filename: "webpack-stats.json",
     }),
   ],
 };
@@ -18,7 +18,7 @@ const devConfig = merge(baseConfig, {
     hot: true,
     // ⇓ 追加 ⇓
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Origin": "*",
     },
     watchOptions: {
       ignored: /node_modules/,
