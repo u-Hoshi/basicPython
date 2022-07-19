@@ -28,6 +28,7 @@ export async function getStaticPaths() {
   };
 }
 
+// getStaticProps関数に外部データをコールする処理(今回はgetPostData関数)を書くとビルド時にサーバー側でデータを取得してHTMLファイルが生成される
 export async function getStaticProps({ params }) {
   const post = await getPostData(params.id);
   return {
