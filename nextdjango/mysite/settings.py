@@ -41,7 +41,41 @@ INSTALLED_APPS = [
     'app',
     'rest_framework',
     'corsheaders',
+
+    'django.contrib.sites',
+    'rest_framework.authtoken',
+    'accounts',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google'
+
 ]
+
+# aullauth googleプロバイダー設定
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# allauth設定
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+
+SITE_ID=1
+
+REST_USE_JWT = True
+REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER':'accounts.serializers.UserSerializer'}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
