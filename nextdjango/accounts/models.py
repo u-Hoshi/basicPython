@@ -35,6 +35,9 @@ class CustomerUser(AbstractBaseUser, PermissionsMixin):
   email = models.EmailField("メールアドレス", unique=True)
   created = models.DateTimeField("入会日", default=timezone.now)
 
+  is_staff = models.BooleanField(default=False)
+  is_active = models.BooleanField(default=True)
+
   objects = UserManager()
 
   USERNAME_FIELD = "username"
