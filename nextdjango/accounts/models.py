@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
 
     return user
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomerUser(AbstractBaseUser, PermissionsMixin):
   userId=models.CharField(
     max_length=255, default=uuid4, primary_key=True, editable=False
   )
@@ -37,7 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
   objects = UserManager()
 
-  USERNAME_FIEDL = "username"
+  USERNAME_FIELD = "username"
   REQUIRED_FIELDS = ["email"]
 
   def __str__(self):

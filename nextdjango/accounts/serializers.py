@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
-from .models import CustomUser
+from .models import CustomerUser
 
 
 class UserSerializer(ModelSerializer):
   class Meta:
-    model = CustomUser
+    model = CustomerUser
     fields =[
       "userId",
       "username",
@@ -13,7 +13,7 @@ class UserSerializer(ModelSerializer):
     ]
 
   def create(self,validated_data):
-    user = CustomUser.objects.create_user(
+    user = CustomerUser.objects.create_user(
       validated_data["username"],
       validated_data["email"],
       validated_data["password"]
