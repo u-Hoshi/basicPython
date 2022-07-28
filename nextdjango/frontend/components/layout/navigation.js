@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import { signin, signout, useSession } from "next-auth/client";
+import Link from "next/link";
 
 export default function Navigation() {
   return (
