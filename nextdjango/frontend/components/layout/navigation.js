@@ -1,4 +1,5 @@
-import { signin, signout, useSession } from "next-auth/client";
+import { signIn, signOut } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Navigation() {
@@ -11,6 +12,29 @@ export default function Navigation() {
         <Link href='/about'>
           <a className='mr-5'>About</a>
         </Link>
+        {session && session.accessToken ? (
+          <>
+            <Link href='/profile'>
+              <a className='mr-5'>Profile</a>
+            </Link>
+
+            <div
+              className='inline-block cursor-pointer'
+              onClick={() => signOut()}
+            >
+              Logout
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              className='inline-block cursor-pointer'
+              onClick={() => signIn()}
+            >
+              Login
+            </div>
+          </>
+        )}
       </nav>
     </header>
   );
