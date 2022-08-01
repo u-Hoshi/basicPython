@@ -1,19 +1,28 @@
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import GoogleProvider from "next-auth/providers/google";
 import axios from "axios";
 
 const settings = {
   providers: [
-    Providers.Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
   callbacks: {
     async signIn(user, account, profile) {
+      console.log("account");
+      console.log(account);
       if (account.provider == "google") {
-        const [accessToken, idToken] = account;
-
+        const { accessToken, idToken } = account;
+        console.log("ok!!!");
         try {
           const response = await axios.post(
             `${process.env.DJANGO_URL}/api/social/login/google`,
@@ -33,12 +42,14 @@ const settings = {
     },
     async jwt(token, user, account, profile, isNewUser) {
       if (user) {
+        const { accessToken } = user;
+
         token.accessToken = accessToken;
       }
       return token;
     },
-    async session(session, user) {
-      session.accessToken = user.accessToken;
+    async session({ session, token, user }) {
+      session.accessToken = token.accessToken;
       return session;
     },
   },

@@ -1,8 +1,9 @@
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 // import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Navigation() {
+  const { session } = useSession();
   return (
     <header className='container flex flex-row items-center mx-auto px-5 py-14 max-w-screen-lg'>
       <Link href='/'>

@@ -1,11 +1,11 @@
 import Head from "next/head";
 import "../styles/globals.css";
 import Layout from "../components/layout/layout";
-import { Provider } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
       <Layout>
         <Head>
           <meta
@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <Component {...pageProps} />
       </Layout>
-    </Provider>
+    </SessionProvider>
   );
 }
 
